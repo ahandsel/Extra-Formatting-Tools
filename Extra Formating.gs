@@ -3,6 +3,8 @@
 // Run the onOpen function
 // Scripts Creats a "Custom menu" w/ "Capitalize Each Word", "lower case", & "UPPER CASE" buttons
 
+// Currently works as long as input is 1 column
+
 function onOpen() {
 	// Adds the Custom menu to the Active Spreadsheet
 	SpreadsheetApp.getUi()
