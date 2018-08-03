@@ -1,7 +1,8 @@
 // Extra Formatting {Google Sheets}
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
+// Run the onOpen function
 // Scripts Creats a "Custom menu" w/ "Capitalize Each Word", "lower case", & "UPPER CASE" buttons
+
 function onOpen() {
 	// Adds the Custom menu to the Active Spreadsheet
 	SpreadsheetApp.getUi()
@@ -14,17 +15,22 @@ function onOpen() {
 			.addSeparator()
 			.addToUi();
 }
-
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 // Interface between the Custom Menu & Main function for text formating
-function proper() {	txt_format_main(proper); }
+function proper() {		txt_format_main(proper); }
 function lower_cap() {	txt_format_main(lower_cap); }
 function upper_cap() {	txt_format_main(upper_cap); }
 
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 // Main function for text formating {Capitalize Each Word, lower case, & UPPER CASE}
+// Steps of the code:
+// 1. Determine the Selected Cells
+// 2. Copy the text in the Cells into tempArray
+// 3. Format the text in the tempArray
+// 4. Insert the text from the tempArray into the Selected Cells
+
 function txt_format_main(format_type) {
 	var tempArray = []; // Temp Array that holds the text for convertion
 	var sheet = SpreadsheetApp.getActiveSheet();
@@ -32,65 +38,24 @@ function txt_format_main(format_type) {
 	
 	// Determine the selected cells & returns their location in A1 notation {e.g. B8:D10}
 	var selectedAddress = spreadsheet.getActiveSheet().getSelection().getActiveRange().getA1Notation();
-	Index_Array = A1_to_Index(selectedAddress); // Index_Array = Row 1, Column 1, Row 2, Column 2
+	
+	// Messages for testing purpose
+	//Browser.msgBox(selectedAddress);
+		
+	// Index_Array = Array with the Selected Address for getRange input format
+	// Index_Array = Row 1, Column 1, Row 2, Column 2
+	Index_Array = A1_to_Index(selectedAddress); 
+	
+	//getRange(row, column, numRows, numColumns)
 	var range = sheet.getRange(Index_Array[0], Index_Array[1], Index_Array[2], Index_Array[3]); 
-		//getRange(row, column, numRows, numColumns)
 	
 	// Extracting data from the Selected Cells
-	var input_values = range.getValues(); // input_values now holds the strings that we want to convert
+	// input_values holds the strings that we want to convert
+	var input_values = range.getValues(); 
 
 	// Messages for testing purpose
 	Browser.msgBox("Input Values = " + input_values);
 	
-	// Iterate through an array, change the string formating, & insert the updated string back into the selected cells
-	// **** THIS IS WHERE THE PROGRAM FAILS! ***
-	for (var row in input_values) {
-		for (var col in input_values[row]) {
-			
-			Browser.msgBox( input_values[row][col] ); //<= input is now working {for testing purpose}
-			tempArray.push( [ toTitleCase( input_values[row][col] ) ] ); //<=  working-ish
-			Browser.msgBox(tempArray); //<= Convertion is now working {for testing purpose}
-			
-			sheet.getRange(input_values[row][col]).setValue( [ toTitleCase( input_values[row][col] ) ] );
-			
-			//range.setValues( toTitleCase(values[row][col]) );
-			Browser.msgBox( input_values[row][col] ); //<= input is now working
-
-		}
-	}
-	
-/*
-	var temp_Index_Array = Index_Array; // [0] = Row 1 | [1] = Column 1
-	
-	//var temp_range = sheet.getRange(Index_Array[0], Index_Array[1]); //getRange(row, column) at Start
-	var temp_value = sheet.getRange(temp_Index_Array[0], temp_Index_Array[1]).getValue();
-	
-	Browser.msgBox( "temp_Index_Array = " + temp_Index_Array) // for testing purpose
-	Browser.msgBox( "numRows = " + Index_Array[2]) // for testing purpose
-	Browser.msgBox( "numColumns = " + Index_Array[3]) // for testing purpose
-	
-	for (var r=1; r<Index_Array[2]; r++) { 
-		for (var c=1; c<Index_Array[3]; c++) { 
-			
-			Browser.msgBox( 'r = '+r); // for testing purpose
-			Browser.msgBox( 'c = '+c); // for testing purpose
-			
-			Browser.msgBox( 'Temp Row = '+temp_Index_Array[0]); // for testing purpose
-			Browser.msgBox( 'Temp Col = '+temp_Index_Array[1]); // for testing purpose
-
-			sheet.getRange(temp_Index_Array[0], temp_Index_Array[1])
-				.setValue( [ toTitleCase( temp_value ) ] );
-			
-			++temp_Index_Array[1]; // ++Column
-			temp_value = sheet.getRange(temp_Index_Array[0], temp_Index_Array[1]).getValue();
-			
-		}
-		++temp_Index_Array[0]; // ++Row
-	}
-	*/
-	
-/*
-// Working-ish code
 	if (format_type == proper) {
 		range.getValues().forEach(
 		//sheet.getRange(selectedAddress).getValues().forEach(
@@ -109,7 +74,6 @@ function txt_format_main(format_type) {
 	Browser.msgBox("tempArray " + tempArray); //for testing purpose
 
 	sheet.getRange(selectedAddress).setValues(tempArray);
-	*/
 }
 
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -146,7 +110,7 @@ function A1_to_Index(A1Notation) {
 	row_1_Index = Address_Array[0].substring(1);	//e.g. 8
 	row_2_Num = Address_Array[1].substring(1) - row_1_Index + 1;	//e.g. 10-8 = 2
 	
-	// Fixing for A:A issues {Column to Column w/out 
+	// Fixing for A:A issues; Column to Column w/out Cell #
 	if (row_1_Index == '') { row_1_Index = 1 }
 	if (row_2_Num < 1) { row_2_Num = 1 }
 
