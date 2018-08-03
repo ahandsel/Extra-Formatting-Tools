@@ -1,7 +1,8 @@
 // Extra Formatting {Google Sheets}
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
+// Run the onOpen function
 // Scripts Creats a "Custom menu" w/ "Capitalize Each Word", "lower case", & "UPPER CASE" buttons
+
 function onOpen() {
 	// Adds the Custom menu to the Active Spreadsheet
 	SpreadsheetApp.getUi()
@@ -14,15 +15,14 @@ function onOpen() {
 			.addSeparator()
 			.addToUi();
 }
-
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 // Interface between the Custom Menu & Main function for text formating
-function proper() {	txt_format_main(proper); }
+function proper() {		txt_format_main(proper); }
 function lower_cap() {	txt_format_main(lower_cap); }
 function upper_cap() {	txt_format_main(upper_cap); }
 
-// = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+// = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 // Main function for text formating {Capitalize Each Word, lower case, & UPPER CASE}
 function txt_format_main(format_type) {
@@ -32,9 +32,10 @@ function txt_format_main(format_type) {
 	
 	// Determine the selected cells & returns their location in A1 notation {e.g. B8:D10}
 	var selectedAddress = spreadsheet.getActiveSheet().getSelection().getActiveRange().getA1Notation();
+	//Browser.msgBox(selectedAddress); //for testing purpose
 	Index_Array = A1_to_Index(selectedAddress); // Index_Array = Row 1, Column 1, Row 2, Column 2
 	var range = sheet.getRange(Index_Array[0], Index_Array[1], Index_Array[2], Index_Array[3]); 
-		//getRange(row, column, numRows, numColumns)
+	//getRange(row, column, numRows, numColumns)
 	
 	// Extracting data from the Selected Cells
 	var input_values = range.getValues(); // input_values now holds the strings that we want to convert
@@ -42,8 +43,6 @@ function txt_format_main(format_type) {
 	// Messages for testing purpose
 	Browser.msgBox("Input Values = " + input_values);
 	
-	// Iterate through an array, change the string formating, & insert the updated string back into the selected cells
-	// **** THIS IS WHERE THE PROGRAM FAILS! ***
 	for (var row in input_values) {
 		for (var col in input_values[row]) {
 			
